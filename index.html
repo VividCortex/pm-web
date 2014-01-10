@@ -22,56 +22,39 @@
 
     <script>
     var psApp = angular.module('psApp', []);
-
     psApp
     .controller("ProcessListCtrl", function($scope, $http, $timeout) {
       (function tick() {
-        getProcesses($http).success(function(data, status, headers, config) {
-        $scope.processes = data.procs;
-       });
-        console.log($scope.processes);
+        getProcesses($http)
+        .success(function(data, status, headers, config) {
+          $scope.processes = data.procs;
+          $scope.serverTime = Date.parse(data.serverTime);
+          for(i in $scope.processes) {
+            $scope.processes[i].statusTime = Date.parse($scope.processes[i].statusTime);
+            $scope.processes[i].procTime = Date.parse($scope.processes[i].procTime);
+            $scope.processes[i].runningStatusTime = ($scope.serverTime - $scope.processes[i].statusTime)/1000.0;
+            $scope.processes[i].runningProcTime = ($scope.serverTime - $scope.processes[i].procTime)/1000.0;
+          }
+
+          // Sort the array by total run time
+          $scope.processes.sort(function(a, b) {
+            return b.runningProcTime - a.runningProcTime;
+          });
+        })
+        .error(function() {
+          $scope.processes = [];
+        })
         $timeout(tick, 1000);
       })();
+
+      $scope.cancel = function(process) {
+          $http({method: "delete", url:"http://localhost:8081/procs/"+process.id, data:{message: "Cancel message"}});
+      };
+
     });
 
-
-
-
-
-
-    var foo = false;
-    function getProcessesFake() {
-      // Faking an API call
-      if(foo == false) {
-        foo = !foo;
-        return [{
-          ID: "foo",
-          Status: "bar"
-        },
-        {
-          ID: "baz",
-          Status: "foo"
-        },
-        {
-          ID: "doge",
-          Status: "much wow"
-        }];
-      }
-      foo = !foo;
-      return [{
-          ID: "doge",
-          Status: "much wow"
-        }];
-    }
-
     function getProcesses($http) {
-      return $http({method: 'GET', url: 'http://localhost:8081/procs/'}).
-        success(function(data, status, headers, config) {
-          return data.procs;
-        }).
-        error(function(data, status, headers, config) {
-          return [];
-        });
+      return $http.get('http://localhost:8081/procs/')
     }
 
     </script>
@@ -82,7 +65,7 @@
       <h1>Process manager</h1>
     </div>
 
-    <table class='table' ng-controller='ProcessListCtrl'>
+    <table class='table table-condensed' ng-controller='ProcessListCtrl'>
       <colgroup>
         <col span='1' style='width: 30%'>
         <col span='1' style='width: 20%'>
@@ -92,16 +75,15 @@
       <tr>
         <th>Process ID</th>
         <th>Status</th>
-        <th>Status time</th>
+        <th>Running time (sec)</th>
         <th>Manage</th>
       </tr>
       <tr ng-repeat="process in processes">
         <td>{{process.id}}</td>
         <td>{{process.status}}</td>
-        <td>{{process.statusTime}}</td>
+        <td>{{process.runningProcTime}}</td>
         <td>
-          <button type="button" class="btn btn-default">Details</button>
-          <button type="button" class="btn btn-danger">Cancel</button>
+          <button type="button" class="btn btn-danger" ng-click="cancel(process)">Cancel</button>
         </td>
       </tr>
     </table>
