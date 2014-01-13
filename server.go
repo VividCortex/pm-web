@@ -40,8 +40,8 @@ func SomeProcess(pid int) {
 	for status, dur := range statuses {
 		elapsed := time.Duration(0)
 		for elapsed != dur {
-			time.Sleep(time.Millisecond * 250)
-			elapsed += time.Millisecond * 250
+			time.Sleep(time.Millisecond * 500)
+			elapsed += time.Millisecond * 500
 			pm.CheckCancel(id)
 		}
 
