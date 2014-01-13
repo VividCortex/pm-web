@@ -43,8 +43,9 @@
         });
         $timeout(tick, 1000);
       })();
+      
       $scope.cancel = function(process) {
-          $http({method: "delete", url:"http://"+process.host+"/procs/"+process.id, data:{message: "Cancel message"}});
+          $http({method: "delete", url:"http://"+process.host.address+"/procs/"+process.id, data:{message: "Cancel message"}});
       };
 
       $scope.addHost = function() {
