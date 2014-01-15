@@ -23,4 +23,4 @@ Copyright (c) 2014 VividCortex, licensed under the MIT license. Please see the L
 
 Cat picture
 ---
-![](http://forum.gamerage.com/crossfire/cfs-filesystemfile.ashx/__key/CommunityServer.Discussions.Components.Files/12/5488.killer_2D00_cat-_2800_1_2900_.jpg)
+![](http://streetcouch.com/wp-content/uploads/2011/02/business-cat-14.jpg)
