@@ -50,6 +50,10 @@ func SomeProcess(pid int) {
 }
 
 func main() {
+	pm.DefaultProclist.Headers = map[string]string{
+		"Access-Control-Allow-Origin": "*",
+	}
+
 	go pm.ListenAndServe(":8081")
 
 	for i := 0; i < 20; i++ {
