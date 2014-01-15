@@ -56,6 +56,8 @@ func main() {
 
 	go pm.ListenAndServe(":8081")
 
+	fmt.Println("Listening on localhost:8081.")
+
 	for i := 0; i < 20; i++ {
 		wg.Add(1)
 		go SomeProcess(i)
