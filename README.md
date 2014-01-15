@@ -23,4 +23,4 @@ Copyright (c) 2014 VividCortex, licensed under the MIT license. Please see the L
 
 Cat picture
 ---
-![](http://streetcouch.com/wp-content/uploads/2011/02/business-cat-14.jpg)
+![](http://i.imgur.com/6DRYIwHm.jpg)
