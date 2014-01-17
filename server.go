@@ -50,10 +50,11 @@ func SomeProcess(pid int) {
 }
 
 func main() {
-	pm.DefaultProclist.Headers = map[string]string{
+	opts := pm.DefaultProclist.Options()
+	opts.HttpHeaders = map[string]string{
 		"Access-Control-Allow-Origin": "*",
 	}
-
+	pm.DefaultProclist.SetOptions(opts)
 	go pm.ListenAndServe(":8081")
 
 	fmt.Println("Listening on localhost:8081.")
