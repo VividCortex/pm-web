@@ -5,6 +5,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <!-- Bootstrap -->
     <link href='css/bootstrap.min.css' rel='stylesheet'>
+    <link href='css/custom.css' rel='stylesheet'>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -13,13 +14,6 @@
     <script src='https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js'></script>
     <![endif]-->
     <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js'></script>
-    <style type='text/css'>
-    .container {
-      max-width: 90%;
-      width: 60em;
-    }
-    </style>
-
     <script src="js/pm-web.js"></script>
   </head>
   <body>
@@ -28,15 +22,25 @@
       <h1>Process manager</h1>
     </div>
     <div ng-controller='ProcessListCtrl'>
-     <div style='padding: 0 0 1em 0'>
+     <div id="host-box" >
         <h3>Hosts</h3>
-        <ul style="list-style: none;">
-          <li style="margin: 0.5em 0" ng-repeat="host in hosts">
+        <ul id="host-list" >
+          <li class="host-item" ng-repeat="host in hosts">
             <input type='checkbox' ng-model='host.active'>
             <span>{{host.address}}</span>
             <button type='button' class='btn btn-danger btn-xs' ng-click='removeHost(host)'>Remove</button>
           </li>
         </ul>
+        <select style="float:right" ng-model="orderProp">
+          <option value="host.address">Host</option>
+          <option value="id">Process ID</option>
+          <option value="status">Status</option>
+          <option value="runningProcTime">Running Time</option>
+        </select>
+        <div style="clear:right"></div>
+        <div style="float:right">
+          Filter: <input ng-model="filter">
+        </div>
         <form ng-submit='addHost()'>
           <input type='text' ng-model='hostAddress' size='40' placeholder="[host]:[port]">
           <input class='btn btn-primary btn-sm' type='submit' value='add'>
@@ -52,7 +56,7 @@
           <th>Running time (sec)</th>
           <th>Manage</th>
         </tr>
-        <tr ng-repeat="process in processes">
+        <tr ng-repeat="process in processes | filter:filter | orderBy:orderProp">
           <td>{{process.host.address}}</td>
           <td><a href="http://{{process.host.address}}/procs/{{process.id}}/history" class="thumb">{{process.id}}</a></td>
           <td>{{process.status}}</td>
