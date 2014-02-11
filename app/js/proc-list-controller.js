@@ -1,8 +1,12 @@
 
-var psApp = angular.module('psApp', []);
-psApp
-.controller("ProcessListCtrl", function($scope, $http, $timeout, $q) {
+pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q, $location) {
   $scope.hosts = [];
+  if($location.search()["host"]) {
+    var hosts = $location.search()["host"].split(',');
+    for(var i in hosts){
+      $scope.hosts.push({address: hosts[i], active:true});
+    }
+  }
   (function tick() {
     getItems($scope, $http, $q)(function(results) {
       if(results == null) return;
@@ -27,11 +31,15 @@ psApp
   };
 
   $scope.addHost = function() {
-    $scope.hosts.push({address: $scope.hostAddress, active: true})
+    $scope.hosts.push({address: $scope.hostAddress, active: true});
+    $location.search("host",$location.search()["host"]+","+$scope.hostAddress);
   };
 
   $scope.removeHost = function(host) {
     $scope.hosts.splice($scope.hosts.indexOf(host), 1);
+    hosts = $location.search()["host"].split(',');
+    hosts.splice(hosts.indexOf(host.address),1);
+    $location.search("host",hosts.join(','));
   }
 
   $scope.orderProp = "runningProcTime"
