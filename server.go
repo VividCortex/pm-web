@@ -24,29 +24,31 @@ var mutex sync.Mutex
 
 var wg sync.WaitGroup
 
-func SomeProcess(pid int) {
-	id := fmt.Sprint(pid)
-
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Printf("pid [%d] cancelled\n", pid)
-		}
-		wg.Done()
-	}()
-
-	pm.Start(id, nil, nil)
-	defer pm.Done(id)
-
-	for _, status := range statuses {
-		time.Sleep(time.Duration((rand.Int()) % 3000 * int(time.Millisecond)))
-		pm.Status(id, status)
-	}
-
-	mutex.Lock()
-	defer mutex.Unlock()
-	pid++
+func SomeProcess() {
 	wg.Add(1)
-	go SomeProcess(pid)
+	go func() {
+		mutex.Lock()
+		pid++
+		id := fmt.Sprint(pid)
+		mutex.Unlock()
+
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Printf("pid [%d] cancelled\n", pid)
+			}
+			wg.Done()
+		}()
+
+		pm.Start(id, nil, nil)
+		defer pm.Done(id)
+
+		for _, status := range statuses {
+			time.Sleep(time.Duration((rand.Int()) % 7000 * int(time.Millisecond)))
+			pm.Status(id, status)
+		}
+
+		SomeProcess()
+	}()
 
 }
 
@@ -63,12 +65,8 @@ func main() {
 
 	fmt.Printf("Listening on localhost%s\n", *port)
 
-	for i := 0; i < 20; i++ {
-		mutex.Lock()
-		pid++
-		wg.Add(1)
-		go SomeProcess(pid)
-		mutex.Unlock()
+	for i := 0; i < 5; i++ {
+		SomeProcess()
 	}
 
 	wg.Wait()

@@ -33,13 +33,13 @@
           <th>Running time (sec)</th>
           <th>Manage</th>
         </tr>
-        <tr ng-repeat="process in processes | filter:filter | orderBy:orderProp">
-          <td>{{process.host.address}}</td>
-          <td><a href="http://{{process.host.address}}/procs/{{process.id}}/history" class="thumb">{{process.id}}</a></td>
-          <td>{{process.status}}</td>
-          <td>{{process.runningProcTime}}</td>
+        <tr ng-repeat="proc in procs | filter:filter | orderBy:orderProp">
+          <td>{{proc.host}}</td>
+          <td><a href="/app/index.html#/proc/{{proc.host}}/{{proc.id}}" class="thumb">{{proc.id}}</a></td>
+          <td>{{proc.status}}</td>
+          <td>{{proc.runningProcTime}}</td>
           <td>
-            <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(process)">Cancel</button>
+            <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(proc)">Cancel</button>
           </td>
         </tr>
       </table>

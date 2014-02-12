@@ -3,12 +3,13 @@ var pmWebApp = angular.module('pmWebApp', [
   'pmWebControllers'
 ]);
 
+//TODO make it so that you can go to localhost:8000/procs rather than localhost:8000/app/index.html#/procs
 pmWebApp.config(
   function($routeProvider) {
-    $routeProvider.when('/list', {
+    $routeProvider.when('/procs', {
       templateUrl: 'partials/proc-list.html',
       controller: 'ProcListCtrl'
-    }).when('/detail', {
+    }).when('/proc/:host/:procId', {
       templateUrl: 'partials/proc-detail.html',
       controller: 'ProcDetailCtrl'
     });

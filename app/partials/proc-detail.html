@@ -1,1 +1,13 @@
-{{banana}}
+<h3>Process: {{procId}} on {{host}}</h3>
+<h2>Currently Active  <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(host,procId)">Cancel</button></h2>
+<table class='table table-condensed'>
+  <tr>
+    <th>Cumulative Time</th>
+    <th>Status</th>
+  </tr>
+  <tr ng-repeat="moment in history">
+    <td>{{moment.cumulativeTime}}</td>
+    <td>{{moment.status}}</td>
+  </tr>
+</table>
+
