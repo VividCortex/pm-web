@@ -3,65 +3,70 @@ package main
 import (
 	"github.com/VividCortex/pm"
 
+	"flag"
 	"fmt"
 	"math/rand"
 	"sync"
 	"time"
 )
 
-var statuses map[string]time.Duration = map[string]time.Duration{
-	"starting":             time.Second,
-	"waiting for requests": time.Second * 2,
-	"accepting request":    time.Millisecond * 100,
-	"receiving data":       time.Second,
-	"querying database":    time.Second * 2,
-	"sending data":         time.Second * 2,
-	"sending response":     time.Second,
+var statuses = []string{"starting",
+	"waiting for requests",
+	"accepting request",
+	"receiving data",
+	"querying database",
+	"sending data",
+	"sending response",
 }
+
+var pid = 0
+var mutex sync.Mutex
 
 var wg sync.WaitGroup
 
-func SomeProcess(pid int) {
-	id := fmt.Sprint(pid)
+func SomeProcess() {
+	wg.Add(1)
+	go func() {
+		mutex.Lock()
+		pid++
+		id := fmt.Sprint(pid)
+		mutex.Unlock()
 
-	time.Sleep(time.Duration((rand.Int()) % 2000 * int(time.Millisecond)))
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Printf("pid [%d] cancelled\n", pid)
+			}
+			wg.Done()
+		}()
 
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Printf("pid [%d] cancelled\n", pid)
+		pm.Start(id, nil, nil)
+		defer pm.Done(id)
+
+		for _, status := range statuses {
+			time.Sleep(time.Duration((rand.Int()) % 7000 * int(time.Millisecond)))
+			pm.Status(id, status)
 		}
-		wg.Done()
+
+		SomeProcess()
 	}()
 
-	pm.Start(id, nil, nil)
-	defer pm.Done(id)
-	time.Sleep(time.Second)
-
-	for status, dur := range statuses {
-		elapsed := time.Duration(0)
-		for elapsed != dur {
-			time.Sleep(time.Millisecond * 500)
-			elapsed += time.Millisecond * 500
-			pm.CheckCancel(id)
-		}
-
-		pm.Status(id, status)
-	}
 }
 
 func main() {
+	port := flag.String("port", ":8081", "port string (ex. :8081)")
+	flag.Parse()
+
 	opts := pm.DefaultProclist.Options()
 	opts.HttpHeaders = map[string]string{
 		"Access-Control-Allow-Origin": "*",
 	}
 	pm.DefaultProclist.SetOptions(opts)
-	go pm.ListenAndServe(":8081")
+	go pm.ListenAndServe(*port)
 
-	fmt.Println("Listening on localhost:8081.")
+	fmt.Printf("Listening on localhost%s\n", *port)
 
-	for i := 0; i < 20; i++ {
-		wg.Add(1)
-		go SomeProcess(i)
+	for i := 0; i < 5; i++ {
+		SomeProcess()
 	}
 
 	wg.Wait()
