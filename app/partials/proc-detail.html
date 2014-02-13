@@ -1,5 +1,9 @@
 <h3>Process: {{procId}} on {{host}}</h3>
-<h2>Currently Active  <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(host,procId)">Cancel</button></h2>
+<div ng-switch on="active">
+<h4 ng-switch-when="true">Currently Active  <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(host,procId)">Cancel</button></h2>
+<h4 ng-switch-when="false">Current Not Active</h4>
+</div>
+
 <table class='table table-condensed'>
   <tr>
     <th>Cumulative Time</th>

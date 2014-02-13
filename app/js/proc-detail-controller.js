@@ -1,4 +1,4 @@
-pmWebControllers.controller("ProcDetailCtrl", function($scope, $routeParams, $http) {
+pmWebControllers.controller("ProcDetailCtrl", function($scope, $routeParams, $http, $timeout) {
 
   var toHHMMSS = function(sec_num) {
     var hours   = Math.floor(sec_num / 3600);
@@ -12,17 +12,24 @@ pmWebControllers.controller("ProcDetailCtrl", function($scope, $routeParams, $ht
     return time;
   }
 
-  $http.get('http://'+$routeParams.host+'/procs/'+$routeParams.procId+'/history').then(function(result){
-    var serverTime = result.data.serverTime;
-    $scope.history = []
-    for(var i in result.data.history) {
-      var millisecs = Date.parse(serverTime)-Date.parse(result.data.history[i].ts);
-      var cumulativeTime = toHHMMSS(millisecs/1000);
-      $scope.history.push({cumulativeTime: cumulativeTime,
-                           status:result.data.history[i].status})
-    }
-  });
-
+  var getHistory = function() {
+    $http.get('http://'+$routeParams.host+'/procs/'+$routeParams.procId+'/history').then(function(result){
+      var serverTime = result.data.serverTime;
+      $scope.history = []
+      for(var i in result.data.history) {
+        var millisecs = Date.parse(serverTime)-Date.parse(result.data.history[i].ts);
+        var cumulativeTime = toHHMMSS(millisecs/1000);
+        $scope.history.push({cumulativeTime: cumulativeTime,
+                             status:result.data.history[i].status})
+      }
+      $timeout(getHistory, 1000);
+    }).catch(function(result){
+      $scope.active = false;
+    });
+  }
+  getHistory();
+  
+  $scope.active = true;
   $scope.host = $routeParams.host;
   $scope.procId = $routeParams.procId;
 

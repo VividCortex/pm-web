@@ -8,12 +8,6 @@
             <button type='button' class='btn btn-danger btn-xs' ng-click='removeHost(host)'>Remove</button>
           </li>
         </ul>
-        <select style="float:right" ng-model="orderProp">
-          <option value="host.address">Host</option>
-          <option value="id">Process ID</option>
-          <option value="status">Status</option>
-          <option value="runningProcTime">Running Time</option>
-        </select>
         <div style="clear:right"></div>
         <div style="float:right">
           Filter: <input ng-model="filter">
@@ -25,12 +19,50 @@
       </div>
       <table class='table table-condensed'>
         <tr>
-          <th>Host</th>
-          <th>Process ID</th>
-          <th>Status <button type="button" class="btn btn-default btn-xs">
-              <span class="glyphicon glyphicon-sort-by-attributes"></span>
-          </button></th>
-          <th>Running time (sec)</th>
+          <th ng-switch on="orderProp">Host
+            <button ng-switch-default type="button" class="btn btn-default btn-xs" ng-click="orderBy('host')">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+            <button ng-switch-when="host" type="button" class="btn btn-default btn-xs" ng-click="orderBy('-host')">
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+            <button ng-switch-when="-host" type="button" class="btn btn-default btn-xs" ng-click="orderBy('host')">
+              <span class="glyphicon glyphicon-chevron-up"></span>
+            </button>
+          </th>
+          <th ng-switch on="orderProp">Process ID
+            <button ng-switch-default type="button" class="btn btn-default btn-xs" ng-click="orderBy('id')">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+            <button ng-switch-when="id" type="button" class="btn btn-default btn-xs" ng-click="orderBy('-id')">
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+            <button ng-switch-when="-id" type="button" class="btn btn-default btn-xs" ng-click="orderBy('id')">
+              <span class="glyphicon glyphicon-chevron-up"></span>
+            </button>
+          </th>
+          <th ng-switch on="orderProp">Status
+            <button ng-switch-default type="button" class="btn btn-default btn-xs" ng-click="orderBy('status')">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+            <button ng-switch-when="status" type="button" class="btn btn-default btn-xs" ng-click="orderBy('-status')">
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+            <button ng-switch-when="-status" type="button" class="btn btn-default btn-xs" ng-click="orderBy('status')">
+              <span class="glyphicon glyphicon-chevron-up"></span>
+            </button>
+          </th>
+          <th ng-switch on="orderProp">Running Time (s)
+            <button ng-switch-default type="button" class="btn btn-default btn-xs" ng-click="orderBy('runningProcTime')">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+            <button ng-switch-when="runningProcTime" type="button" class="btn btn-default btn-xs" ng-click="orderBy('-runningProcTime')">
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+            <button ng-switch-when="-runningProcTime" type="button" class="btn btn-default btn-xs" ng-click="orderBy('runningProcTime')">
+              <span class="glyphicon glyphicon-chevron-up"></span>
+            </button>
+          </th>
           <th>Manage</th>
         </tr>
         <tr ng-repeat="proc in procs | filter:filter | orderBy:orderProp">

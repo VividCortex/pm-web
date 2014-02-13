@@ -1,15 +1,17 @@
 pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q, $location) {
-  var getItems = function($scope, $http) {
+
+  var removeAllProcsForHost = function(host) {
+    $scope.procs = _.filter($scope.procs, function(proc) {
+      return proc.host != host;
+    });
+  }
+  var getHosts = function($scope, $http) {
     var hosts = $scope.hosts;
     for(var i in hosts) {
       if(hosts[i].active){
-        var host = hosts[i].address ;
         $http.get('http://'+hosts[i].address+'/procs/').then(function(response) {
-          console.log(host,$scope.procs)
-          $scope.procs = _.filter($scope.procs, function(proc) {
-            return proc.host != host;
-          });
-          console.log(host,$scope.procs)
+          var host = response.config.url.split('/')[2];
+          removeAllProcsForHost(host);
           var serverTime = Date.parse(response.data.serverTime);
           var procs = response.data.procs;
           for(var j in procs) {
@@ -22,12 +24,15 @@ pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q
             proc.runningProcTime = (serverTime - proc.procTime)/1000.0;
             $scope.procs.push(proc)
           }
-          console.log(host,$scope.procs)
         }).catch(function(response) {
-          $scope.procs = _.filter($scope.procs, function(proc) {
-            return proc.host != hosts[i].address;
-          });
-        })
+          var host = response.config.url.split('/')[2];
+          removeAllProcsForHost(host);
+          _.find($scope.hosts,function(h) {
+            return h.address == host;
+          }).active = false;
+        });
+      } else {
+        removeAllProcsForHost(hosts[i].address);
       }
     }
   }
@@ -41,12 +46,12 @@ pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q
     }
   }
   (function tick() {
-    getItems($scope, $http);
-    //$timeout(tick, 1000);
+    getHosts($scope, $http);
+    $timeout(tick, 1000);
   })();
   
   $scope.cancel = function(process) {
-      $http({method: "delete", url:"http://"+process.host.address+"/procs/"+process.id, data:{message: "Cancel message"}});
+      $http({method: "delete", url:"http://"+process.host+"/procs/"+process.id, data:{message: "Cancel message"}});
   };
 
   $scope.addHost = function() {
@@ -67,6 +72,9 @@ pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q
   }
 
   $scope.orderProp = "runningProcTime"
+  $scope.orderBy = function(field) {
+    $scope.orderProp = field;
+  }
 });
 
 
