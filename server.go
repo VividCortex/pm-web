@@ -56,11 +56,6 @@ func main() {
 	port := flag.String("port", ":8081", "port string (ex. :8081)")
 	flag.Parse()
 
-	opts := pm.DefaultProclist.Options()
-	opts.HttpHeaders = map[string]string{
-		"Access-Control-Allow-Origin": "*",
-	}
-	pm.DefaultProclist.SetOptions(opts)
 	go pm.ListenAndServe(*port)
 
 	fmt.Printf("Listening on localhost%s\n", *port)
