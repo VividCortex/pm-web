@@ -34,7 +34,7 @@ func SomeProcess() {
 
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Printf("pid [%d] cancelled\n", pid)
+				fmt.Printf("pid [%s] cancelled\n", id)
 			}
 			wg.Done()
 		}()
@@ -60,7 +60,7 @@ func main() {
 
 	fmt.Printf("Listening on localhost%s\n", *port)
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 20; i++ {
 		SomeProcess()
 	}
 
