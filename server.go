@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/VividCortex/pm"
-
 	"flag"
 	"fmt"
 	"math/rand"
@@ -23,13 +22,16 @@ var pid = 0
 var mutex sync.Mutex
 
 var wg sync.WaitGroup
+var mapPack map[string]interface{}
 
-func SomeProcess(attributes *map[string]interface{}) {
+//attributes *map[string]interface{}
+func SomeProcess() {
 	wg.Add(1)
 	go func() {
 		mutex.Lock()
 		pid++
 		id := fmt.Sprint(pid)
+		fmt.Println("ID: " + id)
 		mutex.Unlock()
 
 		defer func() {
@@ -39,7 +41,11 @@ func SomeProcess(attributes *map[string]interface{}) {
 			wg.Done()
 		}()
 
-		pm.Start(id, nil, attributes)
+		// --- Generate a new, random Map ---
+		attributes:=packValues();
+
+		// --- Pass the map ---
+		pm.Start(id, nil, &attributes)
 		defer pm.Done(id)
 
 		for _, status := range statuses {
@@ -47,7 +53,7 @@ func SomeProcess(attributes *map[string]interface{}) {
 			pm.Status(id, status)
 		}
 
-		SomeProcess(attributes)
+		SomeProcess()
 	}()
 
 }
@@ -58,9 +64,12 @@ func randInt(min int , max int) int {
         return min + rand.Intn(max-min)
 }
 
-func main() {
-	// --- Initialization
-	mapPack:= make(map[string]interface{})
+func packValues() map[string]interface{} {
+
+	// --- Initialization ---
+	theMap:=make(map[string]interface{})
+
+	// --- The 'bank' of values to pull from ---
 	taste := [] string{
 		"salty", 
 		"sweet", 
@@ -77,18 +86,21 @@ func main() {
 		"cold",
 	}
 
-	// --- Randomize the Attributes
-	fmt.Println("RANDOMMMM")
+	// --- Randomize the Attributes ---
 	numAttrs := randInt(1, 4)
 	for i:=0; i<numAttrs; i++ {
 		d1 := randInt(1,4)
 		d2 := randInt(0,3)
 		switch d1 {
-			case 1: mapPack["Taste"]=taste[d2]
-			case 2: mapPack["Color"]=color[d2]
-			case 3: mapPack["Temperature"]=temperature[d2]
+			case 1: theMap["Taste"]=taste[d2]
+			case 2: theMap["Color"]=color[d2]
+			case 3: theMap["Temperature"]=temperature[d2]
 		}
 	}
+	return theMap
+}
+
+func main() {
 
 	// --- Command Line Parsing ---
 	port := flag.String("port", ":8081", "port string (ex. :8081)")
@@ -99,11 +111,10 @@ func main() {
 	// --- Command Line Checking ---
 	fmt.Printf("Listening on localhost%s\n", *port)
 
-	for i := 0; i < 20; i++ {
-		fmt.Printf("Process %d\n", (i+1))
-		SomeProcess(&mapPack)
+	// --- Creating a ProcList of size 'i' ---
+	for i := 0; i < 10; i++ {
+		SomeProcess()
 	}
 
-	// --- ??? ---
 	wg.Wait()
 }
