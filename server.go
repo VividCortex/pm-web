@@ -24,14 +24,12 @@ var mutex sync.Mutex
 var wg sync.WaitGroup
 var mapPack map[string]interface{}
 
-//attributes *map[string]interface{}
 func SomeProcess() {
 	wg.Add(1)
 	go func() {
 		mutex.Lock()
 		pid++
 		id := fmt.Sprint(pid)
-		fmt.Println("ID: " + id)
 		mutex.Unlock()
 
 		defer func() {
