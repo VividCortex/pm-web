@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/VividCortex/pm"
-
 	"flag"
 	"fmt"
 	"math/rand"
@@ -23,6 +22,7 @@ var pid = 0
 var mutex sync.Mutex
 
 var wg sync.WaitGroup
+var mapPack map[string]interface{}
 
 func SomeProcess() {
 	wg.Add(1)
@@ -39,7 +39,11 @@ func SomeProcess() {
 			wg.Done()
 		}()
 
-		pm.Start(id, nil, nil)
+		// --- Generate a new, random Map ---
+		attributes:=packValues();
+
+		// --- Pass the map ---
+		pm.Start(id, nil, &attributes)
 		defer pm.Done(id)
 
 		for _, status := range statuses {
@@ -52,15 +56,61 @@ func SomeProcess() {
 
 }
 
+// --- Not Inclusive of Maximum --- 
+func randInt(min int , max int) int {
+        rand.Seed( time.Now().UTC().UnixNano())
+        return min + rand.Intn(max-min)
+}
+
+func packValues() map[string]interface{} {
+
+	// --- Initialization ---
+	theMap:=make(map[string]interface{})
+
+	// --- The 'bank' of values to pull from ---
+	taste := [] string{
+		"salty", 
+		"sweet", 
+		"sour",
+	}
+	color := [] string{
+		"red", 
+		"green", 
+		"blue",
+	}
+	temperature := [] string{
+		"hot", 
+		"medium", 
+		"cold",
+	}
+
+	// --- Randomize the Attributes ---
+	numAttrs := randInt(1, 4)
+	for i:=0; i<numAttrs; i++ {
+		d1 := randInt(1,4)
+		d2 := randInt(0,3)
+		switch d1 {
+			case 1: theMap["Taste"]=taste[d2]
+			case 2: theMap["Color"]=color[d2]
+			case 3: theMap["Temperature"]=temperature[d2]
+		}
+	}
+	return theMap
+}
+
 func main() {
+
+	// --- Command Line Parsing ---
 	port := flag.String("port", ":8081", "port string (ex. :8081)")
 	flag.Parse()
 
 	go pm.ListenAndServe(*port)
 
+	// --- Command Line Checking ---
 	fmt.Printf("Listening on localhost%s\n", *port)
 
-	for i := 0; i < 20; i++ {
+	// --- Creating a ProcList of size 'i' ---
+	for i := 0; i < 10; i++ {
 		SomeProcess()
 	}
 
