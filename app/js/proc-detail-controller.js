@@ -13,6 +13,7 @@ pmWebControllers.controller("ProcDetailCtrl", function($scope, $routeParams, $ht
   }
 
   var getHistory = function() {
+    console.log("Result: " + result);
     $http.get('http://'+$routeParams.host+'/procs/'+$routeParams.procId+'/history').then(function(result){
       var serverTime = result.data.serverTime;
       $scope.history = []
