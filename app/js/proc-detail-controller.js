@@ -13,13 +13,18 @@ pmWebControllers.controller("ProcDetailCtrl", function($scope, $routeParams, $ht
   }
 
   var getHistory = function() {
-    alert("Result: " + result);
+    console.log("Result: " + result);
     $http.get('http://'+$routeParams.host+'/procs/'+$routeParams.procId+'/history').then(function(result){
       var serverTime = result.data.serverTime;
       $scope.history = []
       for(var i in result.data.history) {
+        // --- Old ---
+        /*
         var millisecs = Date.parse(serverTime)-Date.parse(result.data.history[i].ts);
-        var cumulativeTime = toHHMMSS(millisecs/1000);
+        var cumulativeTime = toHHMMSS(millisecs/1000);*/
+        
+        // --- New ---
+        var cumulativeTime = toHHMMSS(i.Ts);
         $scope.history.push({cumulativeTime: cumulativeTime,
                              status:result.data.history[i].status})
       }
