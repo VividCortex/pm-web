@@ -32,17 +32,18 @@ func SomeProcess() {
 		id := fmt.Sprint(pid)
 		mutex.Unlock()
 
+		/*
 		defer func() {
 			if r := recover(); r != nil {
 				fmt.Printf("pid [%s] cancelled\n", id)
 			}
 			wg.Done()
-		}()
+		}()*/
 
-		// --- Generate a new, random Map ---
+		// --- Generate a new, random map of attributes ---
 		attributes:=packValues();
 
-		// --- Pass the map ---
+		// --- Start the Process ---
 		pm.Start(id, nil, &attributes)
 		defer pm.Done(id)
 
@@ -50,7 +51,6 @@ func SomeProcess() {
 			time.Sleep(time.Duration((rand.Int()) % 7000 * int(time.Millisecond)))
 			pm.Status(id, status)
 		}
-
 		SomeProcess()
 	}()
 
