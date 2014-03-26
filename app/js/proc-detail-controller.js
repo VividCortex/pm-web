@@ -16,11 +16,10 @@ pmWebControllers.controller("ProcDetailCtrl", function($scope, $routeParams, $ht
     $http.get('http://'+$routeParams.host+'/procs/'+$routeParams.procId+'/history').then(function(result){
       var serverTime = result.data.serverTime;
       $scope.history = []
-      for(var i in result.data.history) {
-        var millisecs = Date.parse(serverTime)-Date.parse(result.data.history[i].ts);
+      for(var i=0; i<result.data.history.length; i++) {      
+        var millisecs = (i==result.data.history.length-1) ? (Date.parse(serverTime)-Date.parse(result.data.history[i].ts)) : (Date.parse(result.data.history[i+1].ts)-Date.parse(result.data.history[i].ts));
         var cumulativeTime = toHHMMSS(millisecs/1000);
-        $scope.history.push({cumulativeTime: cumulativeTime,
-                             status:result.data.history[i].status})
+        $scope.history.push({cumulativeTime: cumulativeTime, status:result.data.history[i].status})
       }
       $timeout(getHistory, 1000);
     }).catch(function(result){
