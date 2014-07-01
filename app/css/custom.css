@@ -1,12 +1,10 @@
 .container {
   max-width: 90%;
-  width: 60em;
-}
-#host-box {
-  padding: 0 0 1em 0;
+  width: 100em;
 }
 #host-list {
   list-style: none;
+  padding-top: 1em;
 }
 #host-item {
   margin: 0.5em 0;
