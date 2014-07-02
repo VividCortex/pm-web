@@ -1,5 +1,6 @@
 pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q, $location) {
 
+
   var removeAllProcsForHost = function(host) {
     $scope.procs = _.filter($scope.procs, function(proc) {
       return proc.host != host;
@@ -36,7 +37,7 @@ pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q
       }
     }
   }
-
+  $scope.poll = 2;
   $scope.procs = [];
   $scope.hosts = [];
   if($location.search()["host"]) {
@@ -46,10 +47,11 @@ pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q
     }
   }
   (function tick() {
+    var pollTime=$scope.poll*1000;
     getHosts($scope, $http);
-    $timeout(tick, 1000);
+    $timeout(tick, pollTime);
   })();
-  
+
   $scope.cancel = function(process) {
       $http({method: "delete", url:"http://"+process.host+"/procs/"+process.id, data:{message: "Cancel message"}});
   };
@@ -75,6 +77,7 @@ pmWebControllers.controller("ProcListCtrl", function($scope, $http, $timeout, $q
   $scope.orderBy = function(field) {
     $scope.orderProp = field;
   }
+
 });
 
 

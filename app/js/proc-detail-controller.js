@@ -28,7 +28,7 @@ pmWebControllers.controller("ProcDetailCtrl", function($scope, $routeParams, $ht
     });
   }
   getHistory();
-  
+
   $scope.active = true;
   $scope.host = $routeParams.host;
   $scope.procId = $routeParams.procId;

@@ -3,6 +3,7 @@
         <div class="col-lg-3 col-xs-12">
             <div id="host-box">
                 <h3>Hosts</h3>
+
                 <div class="host-fields">
                     <form ng-submit='addHost()'>
                         <input type='text' ng-model='hostAddress' size='20' placeholder="[host]:[port]">
@@ -19,9 +20,17 @@
             </div>
         </div>
         <div class="col-lg-9">
-            <div class="filter">
-                Filter:
-                <input ng-model="filter">
+            <div class=" col-lg-4">
+                <div class="filter">
+                    Filter:
+                    <input ng-model="filter">
+                </div>
+            </div>
+            <div class=" col-lg-3">
+                <div class="poll">
+                    Poll Time (s):
+                    <input name=pollInput ng-model="poll" type="number" min="1" max="10"/>
+                </div>
             </div>
             <table class='table table-condensed'>
                 <tr>
@@ -85,11 +94,13 @@
                 </tr>
                 <tr ng-repeat="proc in procs | filter:filter | orderBy:orderProp">
                     <td>{{proc.host}}</td>
-                    <td><a href="/app/index.html#/proc/{{proc.host}}/{{proc.id}}" class="thumb">{{proc.id}}</a></td>
+                    <td><a href="/app/index.html#/proc/{{proc.host}}/{{proc.id}}" class="thumb">{{proc.id}}</a>
+                    </td>
                     <td>{{proc.status}}</td>
                     <td>{{proc.runningProcTime}}</td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(proc)">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(proc)">Cancel
+                        </button>
                     </td>
                 </tr>
             </table>
