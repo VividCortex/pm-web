@@ -2,6 +2,9 @@
   max-width: 90%;
   width: 100em;
 }
+#host-fields {
+    padding-bottom: 2.5em;
+}
 #host-list {
   list-style: none;
   padding-top: 1em;
@@ -9,7 +12,12 @@
 #host-item {
   margin: 0.5em 0;
 }
-h3{
-   margin: 0 0;
-   padding-bottom: .3em;
+#top-row{
+  padding-bottom: 1em;
 }
+h3{
+   margin: 0 2em 0 0;
+   padding-bottom: .5em;
+   display: inline;
+}
+

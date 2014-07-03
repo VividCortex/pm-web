@@ -1,10 +1,14 @@
 <div>
     <div class="row">
-        <div class="col-lg-3 col-xs-12">
+        <div class="col-lg-3">
             <div id="host-box">
-                <h3>Hosts</h3>
+                <div id="top-row">
+                    <h3>Hosts</h3>
+                    <input class='btn btn-primary btn-sm' type='button' value='show poll errors' ng-model="showAll"
+                           btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
 
-                <div class="host-fields">
+                </div>
+                <div id="host-add">
                     <form ng-submit='addHost()'>
                         <input type='text' ng-model='hostAddress' size='20' placeholder="[host]:[port]">
                         <input class='btn btn-primary btn-sm' type='submit' value='add'>
@@ -15,19 +19,20 @@
                         <input type='checkbox' ng-model='host.active'>
                         <span>{{host.address}}</span>
                         <button type='button' class='btn btn-danger btn-xs' ng-click='removeHost(host)'>Remove</button>
+                        <span class="label label-danger" ng-show="host.show && showAll">Error: can't poll host</span>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-lg-9">
-            <div class=" col-lg-4">
-                <div class="filter">
-                    Filter:
-                    <input ng-model="filter">
+            <div id="host-fields">
+                <div class="col-lg-4">
+                    <div class="filter">
+                        Filter:
+                        <input ng-model="filter">
+                    </div>
                 </div>
-            </div>
-            <div class=" col-lg-3">
-                <div class="poll">
+                <div class="col-lg-3">
                     Poll Time (s):
                     <input name=pollInput ng-model="poll" type="number" min="1" max="10"/>
                 </div>

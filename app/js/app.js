@@ -1,6 +1,7 @@
 var pmWebApp = angular.module('pmWebApp', [
     'ngRoute',
-    'pmWebControllers'
+    'pmWebControllers',
+    'ui.bootstrap'
 ]);
 
 //TODO make it so that you can go to localhost:8000/procs rather than localhost:8000/app/index.html#/procs
