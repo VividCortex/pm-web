@@ -55,7 +55,6 @@ pmWebControllers.controller("ProcListCtrl", function ($scope, $http, $timeout, $
             $scope.poll = 1;
         }
         var pollTime = $scope.poll * 1000;
-        console.log($scope.poll);
         getHosts($scope, $http);
         $timeout(tick, pollTime);
     })();

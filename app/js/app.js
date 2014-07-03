@@ -1,6 +1,5 @@
 var pmWebApp = angular.module('pmWebApp', [
     'ngRoute',
-    'ngAnimate',
     'pmWebControllers',
     'ui.bootstrap'
 ]);
