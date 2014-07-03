@@ -1,6 +1,6 @@
 <div>
     <div class="row">
-        <div class="col-lg-3 col-xs-12">
+        <div class="col-lg-3">
             <div id="host-box">
                 <h3>Hosts</h3>
 
@@ -15,18 +15,19 @@
                         <input type='checkbox' ng-model='host.active'>
                         <span>{{host.address}}</span>
                         <button type='button' class='btn btn-danger btn-xs' ng-click='removeHost(host)'>Remove</button>
+                        <span class="label label-danger" ng-show="host.show && !host.active">Error: can't poll host</span>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-lg-9">
-            <div class=" col-lg-4">
+            <div class="col-lg-4">
                 <div class="filter">
                     Filter:
                     <input ng-model="filter">
                 </div>
             </div>
-            <div class=" col-lg-3">
+            <div class="col-lg-3">
                 <div class="poll">
                     Poll Time (s):
                     <input name=pollInput ng-model="poll" type="number" min="1" max="10"/>
