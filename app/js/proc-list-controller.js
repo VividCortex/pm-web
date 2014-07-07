@@ -21,8 +21,10 @@ pmWebControllers.controller("ProcListCtrl", function ($scope, $http, $timeout, $
                         proc.id = procs[j].id;
                         proc.status = procs[j].status;
                         proc.statusTime = Date.parse(procs[j].statusTime);
+                        proc.runningStatusTime=(serverTime-proc.statusTime) / 1000.0;
                         proc.procTime = Date.parse(procs[j].procTime);
                         proc.runningProcTime = (serverTime - proc.procTime) / 1000.0;
+                        proc.attrs=procs[j].attrs;
                         $scope.procs.push(proc)
                     }
                 }).catch(function (response) {
