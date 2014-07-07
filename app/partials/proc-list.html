@@ -26,15 +26,21 @@
         </div>
         <div class="col-lg-9">
             <div id="host-fields">
-                <div class="col-lg-4">
-                    <div class="filter">
-                        Filter:
-                        <input ng-model="filter">
+                <div class="col-lg-9">
+                    <div id="listChange">
+                        <div id="filter">
+                            Filter:
+                            <input ng-model="filter">
+                        </div>
+                        <div id="poll">
+                            Poll Time (s):
+                            <input name=pollInput ng-model="poll" type="number" min="1" max="10"/>
+                        </div>
+                        <div id ="showHidden">
+                        <input class='btn btn-primary btn-sm' type='button' value='show hidden columns' ng-model="showHidden"
+                               btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
-                    Poll Time (s):
-                    <input name=pollInput ng-model="poll" type="number" min="1" max="10"/>
                 </div>
             </div>
             <table class='table table-condensed'>
@@ -96,6 +102,21 @@
                         </button>
                     </th>
                     <th>Manage</th>
+                    <th ng-switch on="orderProp" ng-show="showHidden">Status Time (s)
+                        <button ng-switch-default type="button" class="btn btn-default btn-xs"
+                                ng-click="orderBy('runningStatusTime')">
+                            <span class="glyphicon glyphicon-minus"></span>
+                        </button>
+                        <button ng-switch-when="runningStatusTime" type="button" class="btn btn-default btn-xs"
+                                ng-click="orderBy('-runningStatusTime')">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </button>
+                        <button ng-switch-when="-runningStatusTime" type="button" class="btn btn-default btn-xs"
+                                ng-click="orderBy('runningStatusTime')">
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </button>
+                    </th>
+                    <th ng-show="showHidden">Attributes</th>
                 </tr>
                 <tr ng-repeat="proc in procs | filter:filter | orderBy:orderProp">
                     <td>{{proc.host}}</td>
@@ -107,6 +128,8 @@
                         <button type="button" class="btn btn-danger btn-xs" ng-click="cancel(proc)">Cancel
                         </button>
                     </td>
+                    <td ng-show="showHidden">{{proc.runningStatusTime}}</td>
+                    <td ng-show="showHidden">{{proc.attrs}}</td>
                 </tr>
             </table>
         </div>
