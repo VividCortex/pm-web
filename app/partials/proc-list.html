@@ -120,8 +120,8 @@
                 </tr>
                 <tr ng-repeat="proc in procs | filter:filter | orderBy:orderProp">
                     <td>{{proc.host}}</td>
-                    <!--must be pm-web/app for github pages-->
-                    <td><a href="/index.html#/proc/{{proc.host}}/{{proc.id}}" class="thumb">{{proc.id}}</a>
+                    <!--must be /app/index for github pages and just /index for localhost-->
+                    <td><a href="/app/index.html#/proc/{{proc.host}}/{{proc.id}}" class="thumb">{{proc.id}}</a>
                     </td>
                     <td>{{proc.status}}</td>
                     <td>{{proc.runningProcTime}}</td>
