@@ -1,23 +1,46 @@
 .container {
-  max-width: 90%;
-  width: 100em;
+    max-width: 90%;
+    width: 100em;
 }
+
+#filter {
+    display: inline;
+    padding-right: 8%;
+}
+
+#poll {
+    display: inline;
+    padding-right: 8%;
+}
+
+#showHidden {
+    display: inline;
+}
+
 #host-fields {
     padding-bottom: 2.5em;
 }
+
 #host-list {
-  list-style: none;
-  padding-top: 1em;
+    list-style: none;
+    padding-top: 1em;
 }
+
 #host-item {
-  margin: 0.5em 0;
+    margin: 0.5em 0;
 }
-#top-row{
-  padding-bottom: 1em;
+
+#top-row {
+    padding-bottom: 1em;
 }
-h3{
-   margin: 0 2em 0 0;
-   padding-bottom: .5em;
-   display: inline;
+
+h3 {
+    margin: 0 2em 0 0;
+    padding-bottom: .5em;
+    display: inline;
+}
+
+form {
+    display: inline;
 }
 
